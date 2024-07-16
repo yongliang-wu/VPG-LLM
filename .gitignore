@@ -8,3 +8,4 @@ openai/
 **/__pycache__/
 # Ignore all .pyc files
 *.pyc
+*.sh

@@ -1,7 +1,7 @@
-# OpenLongVA
-An open-source implementation of LongVA for facilitating the large multi-modal model community.
+# VTG-LLM
 
 # Construct Datasets for Finetuning
+```json
 {
         "id": id of the video/image data,
         "video": dir to the video/image data,
@@ -24,3 +24,4 @@ An open-source implementation of LongVA for facilitating the large multi-modal m
             }
         ]
     },
+```
