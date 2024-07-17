@@ -1,17 +1,19 @@
 #!/bin/bash
+export PATH=/root/miniforge3/envs/video/bin:$PATH
 export CUDA_DEVICE_MAX_CONNECTIONS=1
 export GPUS_PER_NODE=8
 export NNODES=1
-export BATCH_SIZE=4
+export BATCH_SIZE=2
 export GRADIENT_ACCU_STEPS=1
 export MASTER_PORT=29502
 export CPUS_PER_TASK=24
 export QUOTA=reserved
 
 export DATA_PATH=data/Charades_number.json
-export SAVE_PATH=Charades_number_test
+export SAVE_PATH=Charades-number-FPS1-mlp-2e-5-vit-2e-6-llm-2e-5
 export BASE_LR=2e-5
 export VIT_LR=2e-6
+
 
 PYTHONPATH="$(dirname $0)/..":$PYTHONPATH \
 torchrun --nnodes $NNODES --nproc_per_node $GPUS_PER_NODE --master_addr localhost --master_port ${MASTER_PORT} \
@@ -23,6 +25,7 @@ longva/train/train_mem.py \
 --image_folder data \
 --video_folder data \
 --num_frames 8 \
+--videobackend all \
 --vision_tower openai/clip-vit-large-patch14-336 \
 --mm_projector_type mlp2x_gelu \
 --unfreeze_mm_vision_tower True \

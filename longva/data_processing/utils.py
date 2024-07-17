@@ -79,7 +79,6 @@ def load_video_into_frames(
     video_decode_backend="opencv",
     num_frames=8,
 ):
-
     if video_decode_backend == "decord":
         import decord
         from decord import VideoReader, cpu
@@ -99,11 +98,9 @@ def load_video_into_frames(
 
     elif video_decode_backend == "opencv":
         import cv2
-
         cv2_vr = cv2.VideoCapture(video_path)
         duration = int(cv2_vr.get(cv2.CAP_PROP_FRAME_COUNT))
         frame_id_list = np.linspace(0, duration - 1, num_frames, dtype=int)
-        # frame_id_list = np.linspace(0, duration-5, num_frames, dtype=int)
 
         video_data = []
         for frame_idx in frame_id_list:
@@ -112,14 +109,27 @@ def load_video_into_frames(
             if not ret:
                 raise ValueError(f"video error at {video_path}")
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            # video_data.append(torch.from_numpy(frame).permute(2, 0, 1))
-            image = Image.fromarray(frame)  # 将帧转换为 PIL 图像
+            image = Image.fromarray(frame)
             video_data.append(image)
-
+            
         cv2_vr.release()
-        # video_data = torch.stack(video_data, dim=1)
+    elif video_decode_backend == "all":
+        import cv2
+        cv2_vr = cv2.VideoCapture(video_path)
+        duration = int(cv2_vr.get(cv2.CAP_PROP_FRAME_COUNT))
+
+        video_data = []
+        for frame_idx in range(duration):
+            ret, frame = cv2_vr.read()
+            if not ret:
+                raise ValueError(f"video error at {video_path}")
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            image = Image.fromarray(frame)
+            video_data.append(image)
+            
+        cv2_vr.release()
     else:
-        raise NameError("video_decode_backend should specify in (pytorchvideo, decord, opencv)")
+        raise NameError("video_decode_backend should specify in (pytorchvideo, decord, opencv, all)")
     return video_data
 
 

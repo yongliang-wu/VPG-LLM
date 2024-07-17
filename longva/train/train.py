@@ -79,6 +79,7 @@ class DataArguments:
     video_folder: Optional[str] = field(default=None)
     num_frames: int = field(default=8)
     image_aspect_ratio: str = 'square'
+    videobackend: str = field(default="all")
 
 
 @dataclass
@@ -973,7 +974,7 @@ class LazySupervisedDataset(Dataset):
             video_folder = self.data_args.video_folder
             processor = self.data_args.image_processor
             video_path = os.path.join(video_folder, video_file)
-            frames_origin = load_video_into_frames(video_path, "opencv", self.data_args.num_frames)
+            frames_origin = load_video_into_frames(video_path, self.data_args.videobackend, self.data_args.num_frames)
             if self.data_args.image_aspect_ratio == 'anyres':
                 image_size = frames_origin[0].size
                 frames_list = [process_video_frame(frame, processor) for frame in frames_origin]
